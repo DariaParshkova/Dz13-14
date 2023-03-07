@@ -13,6 +13,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+        guard let _ = (scene as? UIWindowScene) else {return}
+        if let windowScene = scene as? UIWindowScene {
+            let window = UIWindow(windowScene: windowScene)
+            let loginVc = LoginVC()
+            let navController = UINavigationController(rootViewController: loginVc)
+            
+            self.window = window
+            window.backgroundColor = UIColor.white
+            window.rootViewController = navController
+            window.makeKeyAndVisible()
+            
+            
+            
+            
+        }
+        
        
     }
 
