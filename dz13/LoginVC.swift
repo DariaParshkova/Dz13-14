@@ -11,17 +11,26 @@ class LoginVC: UIViewController, UITextFieldDelegate {
 
     let textFieldForLogin = UITextField()
     let textFieldForPassword = UITextField()
+    let toolBar = UIToolbar()
+    
+    let flexibleSpace = UIBarButtonItem()
+    let doneButton = UIBarButtonItem()
+    
+    
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
         createTFforLogin(view: self)
         createTFforPass(view: self)
-        let viewsArr = [textFieldForLogin, textFieldForPassword]
+        createToolBar(view: self)
+        let viewsArr = [textFieldForLogin, textFieldForPassword, toolBar]
         
         for view in viewsArr {
             self.view.addSubview(view)
         }
         
+
         
         NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: nil) { nc in
             self.view.frame.origin.y = -100
@@ -29,37 +38,67 @@ class LoginVC: UIViewController, UITextFieldDelegate {
    
         NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: nil) {
             nc in
-            self.view.frame.origin.y = 0 
+            self.view.frame.origin.y = 0
         }
+     
+    }
+    
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         
-        
+        textFieldForLogin.frame = CGRect(x: 20, y: 50 + view.safeAreaInsets.top, width: view.frame.size.width-40, height: 50)
+        textFieldForPassword.frame = CGRect(x: 20, y:100 + view.safeAreaInsets.top, width: view.frame.size.width-40, height: 50)
+        toolBar.frame = CGRect(x: 0, y: 0, width: view.frame.size.width, height: 50)
+    }
+    
+    func createToolBar(view:UIViewController) {
+        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action:nil )
+        let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(didTapDone))
+        toolBar.items = [flexibleSpace, doneButton]
         
         
     }
-     
     func createTFforLogin(view:UIViewController) {
-        textFieldForLogin.frame = CGRect(x: 30, y: 90, width: 200, height: 34)
+        //textFieldForLogin.frame = CGRect(x: 30, y: 90, width: 200, height: 34)
         textFieldForLogin.borderStyle = .roundedRect
         textFieldForLogin.placeholder = "login"
         textFieldForLogin.tintColor = .blue
         textFieldForLogin.delegate = self
         //Krestic
         textFieldForLogin.clearButtonMode = .whileEditing
+        textFieldForLogin.inputAccessoryView = toolBar
     }
     
     func createTFforPass(view:UIViewController) {
-        textFieldForPassword.frame = CGRect(x: 30, y: 160, width: 200, height: 34)
+        //textFieldForPassword.frame = CGRect(x: 30, y: 160, width: 200, height: 34)
         textFieldForPassword.borderStyle = .roundedRect
         textFieldForPassword.placeholder = "Password"
         textFieldForPassword.tintColor = .blue
         textFieldForPassword.delegate = self
         //
         textFieldForPassword.clearButtonMode = .whileEditing
+        textFieldForPassword.inputAccessoryView = toolBar
+    }
+   
+
+    @objc func didTapDone() {
+        view.endEditing(true)
     }
     
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        textField.becomeFirstResponder()
+    }
+    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
+        return true
+    }
     
-    
-    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == textFieldForLogin {
+            textFieldForPassword.becomeFirstResponder()
+        }
+        return true
+    }
     
 
     
