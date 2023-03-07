@@ -33,7 +33,7 @@ class LoginVC: UIViewController, UITextFieldDelegate {
 
         
         NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: nil) { nc in
-            self.view.frame.origin.y = -100
+            self.view.frame.origin.y = -50
         }
    
         NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: nil) {
@@ -81,6 +81,9 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         textFieldForPassword.inputAccessoryView = toolBar
     }
    
+    
+    
+    
 
     @objc func didTapDone() {
         view.endEditing(true)
@@ -103,4 +106,18 @@ class LoginVC: UIViewController, UITextFieldDelegate {
 
     
 
+}
+extension String {
+    func isVilidEmail(email:String) -> Bool {
+        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}"
+        let emailTest = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
+        let result = emailTest.evaluate(with: email)
+        return result
+    }
+    func isVilidPassword(password:String) -> Bool {
+        let passwordRegEx = "^(?=.*[a-z])(?=.*[$@$#!%*?&])[A-Za-z\\d$@$#!%*?&]{6,16}"
+        let passwordTest = NSPredicate(format: "SELF MATCHES %@", passwordRegEx)
+        let result = passwordTest.evaluate(with: password)
+        return result
+    }
 }
