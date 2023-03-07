@@ -13,7 +13,7 @@ class LoginVC: UIViewController, UITextFieldDelegate {
     let textFieldForPassword = UITextField()
     let toolBar = UIToolbar()
     let enterButton = UIButton()
-    
+    let registratinButton = UIButton()
     
     let flexibleSpace = UIBarButtonItem()
     let doneButton = UIBarButtonItem()
@@ -27,7 +27,8 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         createTFforPass(view: self)
         createToolBar(view: self)
         createEnterButton(view: self)
-        let viewsArr = [textFieldForLogin, textFieldForPassword, enterButton]
+        createRegButton(view: self)
+        let viewsArr = [textFieldForLogin, textFieldForPassword, enterButton, registratinButton]
         
         for view in viewsArr {
             self.view.addSubview(view)
@@ -84,7 +85,7 @@ class LoginVC: UIViewController, UITextFieldDelegate {
     }
     func createEnterButton(view:UIViewController) {
         
-        enterButton.frame = CGRect(x: 120, y: 350, width: 100, height: 50)
+        enterButton.frame = CGRect(x: 120, y: 310, width: 100, height: 40)
         enterButton.setTitle("Enter", for: .normal)
         enterButton.tintColor = .blue
         enterButton.backgroundColor = .lightGray
@@ -112,7 +113,16 @@ class LoginVC: UIViewController, UITextFieldDelegate {
             }
         }
     }
-    
+    func createRegButton(view:UIViewController) {
+        registratinButton.frame = CGRect(x: 120, y: 270, width: 100, height: 30)
+        registratinButton.setTitle("Registration", for: .normal)
+        registratinButton.setTitleColor(.blue, for: .normal)
+        registratinButton.addTarget(self, action: #selector(regScreen(param:)), for: .touchUpInside)
+    }
+    @objc func regScreen(param:Any) {
+        let regVC = RegestrationVC()
+        self.navigationController?.pushViewController(regVC, animated: true)
+    }
 
     @objc func didTapDone() {
         view.endEditing(true)
