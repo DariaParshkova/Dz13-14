@@ -12,6 +12,8 @@ class LoginVC: UIViewController, UITextFieldDelegate {
     let textFieldForLogin = UITextField()
     let textFieldForPassword = UITextField()
     let toolBar = UIToolbar()
+    let enterButton = UIButton()
+    
     
     let flexibleSpace = UIBarButtonItem()
     let doneButton = UIBarButtonItem()
@@ -24,7 +26,8 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         createTFforLogin(view: self)
         createTFforPass(view: self)
         createToolBar(view: self)
-        let viewsArr = [textFieldForLogin, textFieldForPassword, toolBar]
+        createEnterButton(view: self)
+        let viewsArr = [textFieldForLogin, textFieldForPassword, enterButton]
         
         for view in viewsArr {
             self.view.addSubview(view)
@@ -57,7 +60,6 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(didTapDone))
         toolBar.items = [flexibleSpace, doneButton]
         
-        
     }
     func createTFforLogin(view:UIViewController) {
         //textFieldForLogin.frame = CGRect(x: 30, y: 90, width: 200, height: 34)
@@ -80,9 +82,36 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         textFieldForPassword.clearButtonMode = .whileEditing
         textFieldForPassword.inputAccessoryView = toolBar
     }
-   
+    func createEnterButton(view:UIViewController) {
+        
+        enterButton.frame = CGRect(x: 120, y: 350, width: 100, height: 50)
+        enterButton.setTitle("Enter", for: .normal)
+        enterButton.tintColor = .blue
+        enterButton.backgroundColor = .lightGray
+        enterButton.layer.cornerRadius = 3
+        enterButton.addTarget(self, action: #selector(enterBtnTapped), for: .touchUpInside)
+        
+    }
     
     
+    @objc func enterBtnTapped() {
+        if let email = textFieldForLogin.text, let password = textFieldForPassword.text {
+            if email == "" && password == "" {
+                UtilityFunction().simpleAlert(vc: self, title: "Alert!", message: "Please enter Login and Password")
+            } else {
+                if !email.isVilidEmail(email: email) {
+                    UtilityFunction().simpleAlert(vc: self, title: "Alert!", message: "Please Enter Vilid Login")
+                } else if !password.isVilidPassword(password: password) {
+                    UtilityFunction().simpleAlert(vc: self, title: "Alert!", message: "Please Enter Vilid Password")
+                } else {
+                    UtilityFunction().showSimpleAlert(vc: self, title: "Alert!", message: "Succesful!") { action in
+                        let appVc = AppVC()
+                        self.navigationController?.pushViewController(appVc, animated: true)
+                    }
+                }
+            }
+        }
+    }
     
 
     @objc func didTapDone() {
