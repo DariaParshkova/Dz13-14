@@ -138,6 +138,8 @@ class LoginVC: UIViewController, UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField == textFieldForLogin {
             textFieldForPassword.becomeFirstResponder()
+        } else if textField == textFieldForPassword {
+            textFieldForPassword.resignFirstResponder()
         }
         return true
     }
