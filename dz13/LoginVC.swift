@@ -28,6 +28,8 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         createToolBar(view: self)
         createEnterButton(view: self)
         createRegButton(view: self)
+        hideKeyBoardWhenTapped()
+        notifacationCenter()
         let viewsArr = [textFieldForLogin, textFieldForPassword, enterButton, registratinButton]
         
         for view in viewsArr {
@@ -35,7 +37,9 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         }
         
 
-        
+       
+    }
+    func notifacationCenter() {
         NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: nil) { nc in
             self.view.frame.origin.y = -50
         }
@@ -44,7 +48,6 @@ class LoginVC: UIViewController, UITextFieldDelegate {
             nc in
             self.view.frame.origin.y = 0
         }
-     
     }
     
     
@@ -68,7 +71,6 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         textFieldForLogin.placeholder = "login"
         textFieldForLogin.tintColor = .blue
         textFieldForLogin.delegate = self
-        //Krestic
         textFieldForLogin.clearButtonMode = .whileEditing
         textFieldForLogin.inputAccessoryView = toolBar
     }
@@ -79,40 +81,27 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         textFieldForPassword.placeholder = "Password"
         textFieldForPassword.tintColor = .blue
         textFieldForPassword.delegate = self
-        //
         textFieldForPassword.clearButtonMode = .whileEditing
         textFieldForPassword.inputAccessoryView = toolBar
     }
+    
     func createEnterButton(view:UIViewController) {
-        
         enterButton.frame = CGRect(x: 120, y: 310, width: 100, height: 40)
         enterButton.setTitle("Enter", for: .normal)
         enterButton.tintColor = .blue
         enterButton.backgroundColor = .lightGray
         enterButton.layer.cornerRadius = 3
         enterButton.addTarget(self, action: #selector(enterBtnTapped), for: .touchUpInside)
+        //enterButton.addTarget(self, action: #selector(enterBtnTapped), for: .touchUpInside)
         
     }
     
-    
     @objc func enterBtnTapped() {
-        if let email = textFieldForLogin.text, let password = textFieldForPassword.text {
-            if email == "" && password == "" {
-                UtilityFunction().simpleAlert(vc: self, title: "Alert!", message: "Please enter Login and Password")
-            } else {
-                if !email.isVilidEmail(email: email) {
-                    UtilityFunction().simpleAlert(vc: self, title: "Alert!", message: "Please Enter Vilid Login")
-                } else if !password.isVilidPassword(password: password) {
-                    UtilityFunction().simpleAlert(vc: self, title: "Alert!", message: "Please Enter Vilid Password")
-                } else {
-                    UtilityFunction().showSimpleAlert(vc: self, title: "Alert!", message: "Succesful!") { action in
-                        let appVc = AppVC()
-                        self.navigationController?.pushViewController(appVc, animated: true)
-                    }
-                }
-            }
-        }
+        let appVc = AppVC()
+        self.navigationController?.pushViewController(appVc, animated: true)
     }
+    
+    
     func createRegButton(view:UIViewController) {
         registratinButton.frame = CGRect(x: 120, y: 270, width: 100, height: 30)
         registratinButton.setTitle("Registration", for: .normal)
@@ -134,7 +123,7 @@ class LoginVC: UIViewController, UITextFieldDelegate {
     func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
         return true
     }
-    
+    //перескакиваем на след поле и убираем клавиатуру при нажатии на enter
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField == textFieldForLogin {
             textFieldForPassword.becomeFirstResponder()
@@ -148,17 +137,4 @@ class LoginVC: UIViewController, UITextFieldDelegate {
     
 
 }
-extension String {
-    func isVilidEmail(email:String) -> Bool {
-        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}"
-        let emailTest = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
-        let result = emailTest.evaluate(with: email)
-        return result
-    }
-    func isVilidPassword(password:String) -> Bool {
-        let passwordRegEx = "^(?=.*[a-z])(?=.*[$@$#!%*?&])[A-Za-z\\d$@$#!%*?&]{6,16}"
-        let passwordTest = NSPredicate(format: "SELF MATCHES %@", passwordRegEx)
-        let result = passwordTest.evaluate(with: password)
-        return result
-    }
-}
+
