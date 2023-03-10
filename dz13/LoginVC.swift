@@ -28,7 +28,6 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         createToolBar(view: self)
         createEnterButton(view: self)
         createRegButton(view: self)
-        hideKeyBoardWhenTapped()
         notifacationCenter()
         let viewsArr = [textFieldForLogin, textFieldForPassword, enterButton, registratinButton]
         
@@ -132,8 +131,11 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         }
         return true
     }
-    
-
+    //исчезновение клавиатуры при нажатии на рандомное место
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        textFieldForLogin.resignFirstResponder()
+        textFieldForPassword.resignFirstResponder()
+    }
     
 
 }

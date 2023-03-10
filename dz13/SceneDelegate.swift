@@ -57,15 +57,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
 }
-//Скрытие клавиатуру при рандомном нажатии 
-extension UIViewController {
-    func hideKeyBoardWhenTapped() {
-        _ = UITapGestureRecognizer(target: self, action: #selector(dismissKeyBoard))
-    }
-    @objc func dismissKeyBoard() {
-        view.endEditing(true)
-    }
-}
 
 
 
