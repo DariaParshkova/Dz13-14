@@ -9,34 +9,43 @@ import UIKit
 
 class AppVC: UIViewController {
     let textView = UITextView()
-    let settingsTextView = UIView()
-  
-    
-    
-    
+    let settingsViews = Settings()
+    //let settingsTextView = UIView()
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.hidesBackButton = true
-        createSettingsTV()
         createTextView()
+        createSettingsView()
+        //createSettingsTV()
         createBarButton()
         notification()
+
+      
         
-        
-        let arrForView = [settingsTextView, textView]
+      
+        let arrForView = [ textView, settingsViews]
         for view in arrForView {
             self.view.addSubview(view)
         }
      
+    }
+    func createSettingsView() {
+        
+        settingsViews.frame = CGRect(x: 100, y: 100 + view.safeAreaInsets.top, width: self.view.bounds.width - 105, height: 220)
+        settingsViews.layer.cornerRadius = settingsViews.frame.size.height / 8
+        settingsViews.backgroundColor = .yellow.withAlphaComponent(0.40)
+        settingsViews.isHidden = true
     }
     //Notificatiom
     func notification() {
         NotificationCenter.default.addObserver(self, selector: #selector(updateTextView(param:)), name: UIResponder.keyboardDidShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateTextView(param:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.textView.resignFirstResponder()
     }
+    
     @objc func updateTextView(param:Notification) {
         let userInfo = param.userInfo
         let getKeyboardRect = (userInfo![UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
@@ -52,15 +61,14 @@ class AppVC: UIViewController {
     }
     
     func createBarButton() {
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .done, target: self, action: nil)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .done, target:self, action:#selector(openedTheSettinds))
         
-       
-        
+                                    
     }
     //
     func createTextView() {
         textView.frame = CGRect(x: 0, y: 75 + view.safeAreaInsets.top, width: self.view.bounds.width, height: self.view.bounds.height - 50)
-        textView.backgroundColor = .lightGray
+        //textView.backgroundColor = .lightGray
         textView.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 0, right: 0)
         textView.font = UIFont.systemFont(ofSize: 20)
         textView.text = "Hei i am Dari and i like programming. I'll graduate from university next yaear of way programming"
@@ -68,15 +76,23 @@ class AppVC: UIViewController {
         
     }
     
-    
+    /*
     func createSettingsTV() {
         settingsTextView.frame = CGRect(x: 100, y: 100 + view.safeAreaInsets.top, width: self.view.bounds.width - 105, height: 220)
+        //settingsTextView.frame = CGRect(x: 0, y: 750, width: self.view.bounds.width, height: 150)
         settingsTextView.layer.cornerRadius = settingsTextView.frame.size.height / 8
-        settingsTextView.backgroundColor = .yellow.withAlphaComponent(0.30)
-        //settingsTextView.isHidden = true
+        //settingsTextView.backgroundColor = .yellow
+        settingsTextView.backgroundColor = .yellow.withAlphaComponent(0.40)
+        settingsTextView.isHidden = true
+    }*/
+
+    @objc func openedTheSettinds() {
+        if settingsViews.isHidden {
+            settingsViews.isHidden = false
+        } else {
+            settingsViews.isHidden = true
+        }
     }
-    
-    
     
     
     
@@ -111,3 +127,13 @@ extension AppVC : UIPickerViewDelegate, UIPickerViewDataSource {
     
 }
 var fontsArr = ["Tahoma","Georgia","Arial","Zapfino"]
+
+class Settings : UIView {
+    override init(frame: CGRect) {
+        super.init(frame:frame)
+        
+    }
+    required init?(coder:NSCoder) {
+        fatalError()
+    }
+}
