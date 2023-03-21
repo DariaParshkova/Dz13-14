@@ -86,11 +86,12 @@ class RegestrationVC: UIViewController, UITextFieldDelegate {
     
     }
     func createRegButton(view:UIViewController) {
-        regButton.frame = CGRect(x: 120, y: 300, width: 100, height: 30)
+        regButton.frame = CGRect(x: 120, y: 320, width: 100, height: 30)
         regButton.setTitle("Regitration", for: .normal)
         regButton.setTitleColor(.blue, for: .normal)
         regButton.backgroundColor = .lightGray
         regButton.layer.cornerRadius = 3
+        regButton.addTarget(self, action: #selector(enterRegTpd), for: .touchUpInside)
         
     }
     
