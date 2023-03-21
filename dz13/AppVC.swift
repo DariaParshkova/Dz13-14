@@ -9,7 +9,11 @@ import UIKit
 
 class AppVC: UIViewController {
     let textView = UITextView()
-    let settingsViews = Settings()
+    let settingsViews = UIView()
+    let (blackButton, blueButton, brownButton, whiteButton) = (UIButton(), UIButton(), UIButton(), UIButton())
+    let picker = UIPickerView()
+    let slider = UISlider()
+    let modeSwitch = UISwitch()
     //let settingsTextView = UIView()
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,14 +23,17 @@ class AppVC: UIViewController {
         //createSettingsTV()
         createBarButton()
         notification()
-
-      
-        
+        createColorButtons()
+        createPickerView()
+        createSlider()
+        createSwitch()
       
         let arrForView = [ textView, settingsViews]
         for view in arrForView {
             self.view.addSubview(view)
         }
+        
+    
      
     }
     func createSettingsView() {
@@ -62,9 +69,16 @@ class AppVC: UIViewController {
     
     func createBarButton() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .done, target:self, action:#selector(openedTheSettinds))
-        
-                                    
+                                
     }
+        @objc func openedTheSettinds() {
+            if settingsViews.isHidden {
+                settingsViews.isHidden = false
+            } else {
+                settingsViews.isHidden = true
+            }
+        }
+        
     //
     func createTextView() {
         textView.frame = CGRect(x: 0, y: 75 + view.safeAreaInsets.top, width: self.view.bounds.width, height: self.view.bounds.height - 50)
@@ -76,34 +90,67 @@ class AppVC: UIViewController {
         
     }
     
-    /*
-    func createSettingsTV() {
-        settingsTextView.frame = CGRect(x: 100, y: 100 + view.safeAreaInsets.top, width: self.view.bounds.width - 105, height: 220)
-        //settingsTextView.frame = CGRect(x: 0, y: 750, width: self.view.bounds.width, height: 150)
-        settingsTextView.layer.cornerRadius = settingsTextView.frame.size.height / 8
-        //settingsTextView.backgroundColor = .yellow
-        settingsTextView.backgroundColor = .yellow.withAlphaComponent(0.40)
-        settingsTextView.isHidden = true
-    }*/
-
-    @objc func openedTheSettinds() {
-        if settingsViews.isHidden {
-            settingsViews.isHidden = false
-        } else {
-            settingsViews.isHidden = true
+    func createColorButtons() {
+        let buttonsArr = [blackButton, blueButton, brownButton, whiteButton]
+        var startX = 20
+        blackButton.backgroundColor = .black
+        blueButton.backgroundColor = .blue
+        brownButton.backgroundColor = .brown
+        whiteButton.backgroundColor = .white
+        
+        for oneButton in buttonsArr {
+            oneButton.frame = CGRect(x: startX, y: 20, width: 40, height: 40)
+            //сдвиг след кнопки по оси x
+            startX += 44
+            oneButton.layer.cornerRadius = 10
+            settingsViews.addSubview(oneButton)
+            oneButton.addTarget(self, action: #selector(changeTextColor(button: )), for:.touchUpInside)
         }
     }
+    @objc func changeTextColor(button:UIButton) {
+        textView.textColor = button.backgroundColor
+    }
+    func createPickerView() {
+        picker.frame = CGRect(x: 20, y: 90, width: 150, height: 120)
+        picker.dataSource = self
+        picker.delegate = self
+        settingsViews.addSubview(picker)
+    }
+    func createSlider() {
+        slider.frame = CGRect(x:20, y:70 , width: 100, height: 30)
+        slider.minimumValue = 12
+        slider.maximumValue = 35
+        slider.value = 20
+        textView.font = textView.font?.withSize(CGFloat(slider.value))
+        slider.addTarget(self, action:#selector(changeFontSize), for: .valueChanged)
+        settingsViews.addSubview(slider)
+    }
+    @objc func changeFontSize() {
+        textView.font = textView.font?.withSize(CGFloat(slider.value))
+    }
     
+    func createSwitch() {
+        modeSwitch.frame = CGRect(x: 210, y: 20, width: 49, height: 30)
+        modeSwitch.isOn = false
+        settingsViews.addSubview(modeSwitch)
+        modeSwitch.addTarget(self, action: #selector(modeBackground), for: .valueChanged)
+    }
     
+    @objc func modeBackground() {
+        if modeSwitch.isOn {
+            self.view.backgroundColor = .black
+            textView.backgroundColor = .black
+            textView.textColor = .white
+        } else {
+            self.view.backgroundColor = .white
+            textView.backgroundColor = .white
+            textView.textColor = .black
+        }
+        
+    }
     
-    
-    
-    
- 
+  
 }
-
-
-
 
 
 extension AppVC : UIPickerViewDelegate, UIPickerViewDataSource {
@@ -118,22 +165,12 @@ extension AppVC : UIPickerViewDelegate, UIPickerViewDataSource {
         return fontsArr[row]
     }
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        //textView.font = UIFont(name: fontsArr[row], size: self.textView.font?.pointSize)
-        //textView.font = UIFont(name: fontsArr[row], size: CGFloat(s))
-        textView.text = fontsArr[row]
-        
+        textView.font = UIFont(name: fontsArr[row], size: self.textView.font?.pointSize ?? CGFloat(slider.value))
     }
     
     
 }
-var fontsArr = ["Tahoma","Georgia","Arial","Zapfino"]
+var fontsArr = ["Tahoma","Georgia","Zapfino"]
 
-class Settings : UIView {
-    override init(frame: CGRect) {
-        super.init(frame:frame)
-        
-    }
-    required init?(coder:NSCoder) {
-        fatalError()
-    }
-}
+
+
